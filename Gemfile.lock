@@ -320,6 +320,7 @@ DEPENDENCIES
   bootsnap
   brakeman
   debug
+  dotenv
   kamal
   mysql2 (~> 0.5)
   puma (>= 5.0)

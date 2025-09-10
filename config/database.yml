@@ -12,21 +12,22 @@
 default: &default
   adapter: mysql2
   encoding: utf8mb4
+  host: <%= ENV['DB_HOST'] || 'localhost' %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  username: root
-  password:
+  username: <%= ENV['DB_USERNAME'] %>
+  password: <%= ENV['DB_PASSWORD'] %>
   socket: /tmp/mysql.sock
 
 development:
   <<: *default
-  database: good_night_riyandika_development
+  database: <%= ENV['DB_NAME'] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: good_night_riyandika_test
+  database: <%= ENV['DB_NAME_TEST'] %>
 
 # As with config/credentials.yml, you never want to store sensitive information,
 # like your database password, in your source code. If your source code is
@@ -51,18 +52,5 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    database: good_night_riyandika_production
-    username: good_night_riyandika
-    password: <%= ENV["GOOD_NIGHT_RIYANDIKA_DATABASE_PASSWORD"] %>
-  cache:
-    <<: *primary_production
-    database: good_night_riyandika_production_cache
-    migrations_paths: db/cache_migrate
-  queue:
-    <<: *primary_production
-    database: good_night_riyandika_production_queue
-    migrations_paths: db/queue_migrate
-  cable:
-    <<: *primary_production
-    database: good_night_riyandika_production_cable
-    migrations_paths: db/cable_migrate
+    database: <%= ENV['DB_NAME'] %>
+
