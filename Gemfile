@@ -49,4 +49,6 @@ group :development, :test do
 
   # Generate fake data for seeding
   gem "faker"
+
+  gem "rspec-rails", "~> 8.0"
 end
