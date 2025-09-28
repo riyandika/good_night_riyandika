@@ -11,7 +11,8 @@ class User < ApplicationRecord
   has_many :followers, through: :followee_relationships, source: :follower
 
   def follow(user)
-    following << user unless following.include?(user) || self == user
+    return false if following?(user) || self == user
+    follower_relationships.create(followee: user)
   end
 
   def unfollow(user)
