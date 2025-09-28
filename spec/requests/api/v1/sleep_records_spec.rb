@@ -16,7 +16,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
       it "returns success message for clock in" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response['message']).to eq("Successfully clocked in")
         expect(json_response['sleep_record']).to have_key('id')
         expect(json_response['sleep_record']['user_id']).to eq(current_user.id)
@@ -35,9 +35,9 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
     context "when user has an in-progress sleep record (clock out)" do
       let!(:in_progress_record) do
-        create(:sleep_record, 
-               user: current_user, 
-               sleep_at: 2.hours.ago, 
+        create(:sleep_record,
+               user: current_user,
+               sleep_at: 2.hours.ago,
                wake_up_at: nil)
       end
 
@@ -51,7 +51,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
       it "returns success message for clock out" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response['message']).to eq("Successfully clocked out")
         expect(json_response['sleep_record']).to have_key('id')
         expect(json_response['sleep_record']['id']).to eq(in_progress_record.id)
@@ -99,7 +99,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
       it "returns paginated sleep records with metadata" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response).to have_key('data')
         expect(json_response).to have_key('pagination')
         expect(json_response['data']).to be_an(Array)
@@ -109,7 +109,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "returns pagination metadata" do
         json_response = JSON.parse(response.body)
         pagination = json_response['pagination']
-        
+
         expect(pagination['current_page']).to eq(1)
         expect(pagination['per_page']).to eq(20)
         expect(pagination['total_pages']).to eq(2) # 25 records, 20 per page
@@ -119,7 +119,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "returns sleep records with correct attributes" do
         json_response = JSON.parse(response.body)
         sleep_record_data = json_response['data'].first
-        
+
         expect(sleep_record_data).to have_key('id')
         expect(sleep_record_data).to have_key('user_id')
         expect(sleep_record_data).to have_key('sleep_at')
@@ -132,7 +132,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "returns records in recent order (newest first)" do
         json_response = JSON.parse(response.body)
         records = json_response['data']
-        
+
         # Check that records are sorted by created_at desc (most recent first)
         expect(records.first['id']).to eq(sleep_records.last.id)
       end
@@ -144,7 +144,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "returns correct page and per_page" do
         json_response = JSON.parse(response.body)
         pagination = json_response['pagination']
-        
+
         expect(pagination['current_page']).to eq(2)
         expect(pagination['per_page']).to eq(10)
         expect(json_response['data'].length).to eq(10)
@@ -158,7 +158,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
       it "returns empty array" do
         json_response = JSON.parse(response.body)
-        
+
         expect(response).to have_http_status(:success)
         expect(json_response['data']).to be_empty
         expect(json_response['pagination']['total_count']).to eq(0)
@@ -220,7 +220,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
       it "returns paginated friends sleep records" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response).to have_key('data')
         expect(json_response).to have_key('pagination')
         expect(json_response['data']).to be_an(Array)
@@ -229,7 +229,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "only includes records from followed users" do
         json_response = JSON.parse(response.body)
         user_ids = json_response['data'].map { |record| record['user_id'] }.uniq
-        
+
         expect(user_ids).to include(friend1.id)
         expect(user_ids).to include(friend2.id)
         expect(user_ids).not_to include(non_friend.id)
@@ -238,10 +238,10 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "only includes completed records from the past week" do
         json_response = JSON.parse(response.body)
         records = json_response['data']
-        
+
         # Should have 3 records total (2 from friend1, 1 from friend2)
         expect(records.length).to eq(3)
-        
+
         # Should not include the old record or non-friend record
         record_ids = records.map { |r| r['id'] }
         expect(record_ids).not_to include(old_record.id)
@@ -251,10 +251,10 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "orders records by duration descending" do
         json_response = JSON.parse(response.body)
         records = json_response['data']
-        
+
         durations = records.map { |r| r['duration_in_seconds'] }
         expect(durations).to eq(durations.sort.reverse)
-        
+
         # Friend2's 9-hour record should be first (32400 seconds)
         expect(records.first['duration_in_seconds']).to eq(32400)
         expect(records.first['user_id']).to eq(friend2.id)
@@ -263,7 +263,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "returns sleep records with correct attributes" do
         json_response = JSON.parse(response.body)
         sleep_record_data = json_response['data'].first
-        
+
         expect(sleep_record_data).to have_key('id')
         expect(sleep_record_data).to have_key('user_id')
         expect(sleep_record_data).to have_key('sleep_at')
@@ -278,7 +278,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
       it "returns empty array" do
         json_response = JSON.parse(response.body)
-        
+
         expect(response).to have_http_status(:success)
         expect(json_response['data']).to be_empty
         expect(json_response['pagination']['total_count']).to eq(0)
@@ -292,7 +292,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
 
       it "returns empty array" do
         json_response = JSON.parse(response.body)
-        
+
         expect(response).to have_http_status(:success)
         expect(json_response['data']).to be_empty
         expect(json_response['pagination']['total_count']).to eq(0)
@@ -324,7 +324,7 @@ RSpec.describe "Api::V1::SleepRecords", type: :request do
       it "returns correct pagination" do
         json_response = JSON.parse(response.body)
         pagination = json_response['pagination']
-        
+
         expect(pagination['current_page']).to eq(2)
         expect(pagination['per_page']).to eq(10)
         expect(json_response['data'].length).to eq(10)
