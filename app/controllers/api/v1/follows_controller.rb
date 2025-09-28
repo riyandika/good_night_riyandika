@@ -1,6 +1,7 @@
 module Api
   module V1
     class FollowsController < BaseController
+      include Paginatable
       before_action :set_current_user
       before_action :set_target_user, only: [ :create, :destroy ]
 
@@ -18,18 +19,7 @@ module Api
 
       # GET /api/v1/users/:user_id/follows
       def index
-        followings = @current_user.following
-                      .page(params[:page])
-                      .per(params[:per_page] || 20)
-        render json: {
-          followings: ActiveModel::Serializer::CollectionSerializer.new(followings, serializer: UserSerializer),
-          pagination: {
-            current_page: followings.current_page,
-            per_page: followings.limit_value,
-            total_pages: followings.total_pages,
-            total_count: followings.total_count
-          }
-        }
+        render json: paginate_collection(@current_user.following, UserSerializer)
       end
 
       # DELETE /api/v1/users/:user_id/follows/:target_user_id

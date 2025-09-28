@@ -125,13 +125,13 @@ RSpec.describe "Api::V1::Follows", type: :request do
         expect(response).to have_http_status(:success)
       end
 
-      it "returns followings with pagination metadata" do
+      it "returns paginated data with pagination metadata" do
         json_response = JSON.parse(response.body)
 
-        expect(json_response).to have_key('followings')
+        expect(json_response).to have_key('data')
         expect(json_response).to have_key('pagination')
-        expect(json_response['followings']).to be_an(Array)
-        expect(json_response['followings'].length).to eq(20) # default per_page
+        expect(json_response['data']).to be_an(Array)
+        expect(json_response['data'].length).to eq(20) # default per_page
       end
 
       it "returns correct pagination metadata" do
@@ -146,11 +146,11 @@ RSpec.describe "Api::V1::Follows", type: :request do
 
       it "returns users with correct attributes" do
         json_response = JSON.parse(response.body)
-        following_data = json_response['followings'].first
+        user_data = json_response['data'].first
 
-        expect(following_data).to have_key('id')
-        expect(following_data).to have_key('name')
-        expect(following_data).to have_key('created_at')
+        expect(user_data).to have_key('id')
+        expect(user_data).to have_key('name')
+        expect(user_data).to have_key('created_at')
       end
     end
 
@@ -163,7 +163,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
 
         expect(pagination['current_page']).to eq(2)
         expect(pagination['per_page']).to eq(15)
-        expect(json_response['followings'].length).to eq(10) # 25 total - 15 on first page = 10 on second
+        expect(json_response['data'].length).to eq(10) # 25 total - 15 on first page = 10 on second
       end
     end
 
@@ -189,7 +189,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
         json_response = JSON.parse(response.body)
 
         expect(response).to have_http_status(:success)
-        expect(json_response['followings']).to be_empty
+        expect(json_response['data']).to be_empty
         expect(json_response['pagination']['total_count']).to eq(0)
       end
     end
