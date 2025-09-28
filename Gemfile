@@ -60,4 +60,7 @@ group :development, :test do
   gem "faker"
 
   gem "rspec-rails", "~> 8.0"
+  
+  # Factory for test data
+  gem "factory_bot_rails"
 end

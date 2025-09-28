@@ -16,7 +16,9 @@ class User < ApplicationRecord
   end
 
   def unfollow(user)
+    return false unless following?(user)
     following.delete(user)
+    true
   end
 
   def following?(user)
