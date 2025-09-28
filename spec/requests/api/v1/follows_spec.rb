@@ -19,7 +19,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
 
       it "returns success message" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response['message']).to eq("Successfully followed user")
         expect(json_response['follow']).to have_key('id')
         expect(json_response['follow']['name']).to eq(target_user.name)
@@ -127,7 +127,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
 
       it "returns followings with pagination metadata" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response).to have_key('followings')
         expect(json_response).to have_key('pagination')
         expect(json_response['followings']).to be_an(Array)
@@ -137,7 +137,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
       it "returns correct pagination metadata" do
         json_response = JSON.parse(response.body)
         pagination = json_response['pagination']
-        
+
         expect(pagination['current_page']).to eq(1)
         expect(pagination['per_page']).to eq(20)
         expect(pagination['total_pages']).to eq(2) # 25 followed users, 20 per page
@@ -147,7 +147,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
       it "returns users with correct attributes" do
         json_response = JSON.parse(response.body)
         following_data = json_response['followings'].first
-        
+
         expect(following_data).to have_key('id')
         expect(following_data).to have_key('name')
         expect(following_data).to have_key('created_at')
@@ -160,7 +160,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
       it "returns correct page and per_page" do
         json_response = JSON.parse(response.body)
         pagination = json_response['pagination']
-        
+
         expect(pagination['current_page']).to eq(2)
         expect(pagination['per_page']).to eq(15)
         expect(json_response['followings'].length).to eq(10) # 25 total - 15 on first page = 10 on second
@@ -187,7 +187,7 @@ RSpec.describe "Api::V1::Follows", type: :request do
 
       it "returns empty array" do
         json_response = JSON.parse(response.body)
-        
+
         expect(response).to have_http_status(:success)
         expect(json_response['followings']).to be_empty
         expect(json_response['pagination']['total_count']).to eq(0)

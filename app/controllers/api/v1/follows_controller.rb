@@ -2,7 +2,7 @@ module Api
   module V1
     class FollowsController < BaseController
       before_action :set_current_user
-      before_action :set_target_user, only: [:create, :destroy]
+      before_action :set_target_user, only: [ :create, :destroy ]
 
       # POST /api/v1/users/:user_id/follows
       def create

@@ -19,7 +19,7 @@ module Paginatable
 
     if serializer_class
       response_data[:data] = ActiveModel::Serializer::CollectionSerializer.new(
-        paginated_collection, 
+        paginated_collection,
         serializer: serializer_class
       )
     else

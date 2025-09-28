@@ -14,7 +14,7 @@ RSpec.describe "Api::V1::Users", type: :request do
 
       it "returns users with pagination metadata" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response).to have_key('data')
         expect(json_response).to have_key('pagination')
         expect(json_response['data']).to be_an(Array)
@@ -24,7 +24,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       it "returns pagination metadata" do
         json_response = JSON.parse(response.body)
         pagination = json_response['pagination']
-        
+
         expect(pagination['current_page']).to eq(1)
         expect(pagination['per_page']).to eq(20)
         expect(pagination['total_pages']).to eq(2) # 25 users, 20 per page
@@ -34,7 +34,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       it "returns users with correct attributes" do
         json_response = JSON.parse(response.body)
         user_data = json_response['data'].first
-        
+
         expect(user_data).to have_key('id')
         expect(user_data).to have_key('name')
         expect(user_data).to have_key('created_at')
@@ -47,7 +47,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       it "returns correct page and per_page" do
         json_response = JSON.parse(response.body)
         pagination = json_response['pagination']
-        
+
         expect(pagination['current_page']).to eq(2)
         expect(pagination['per_page']).to eq(10)
         expect(json_response['data'].length).to eq(10)
@@ -59,7 +59,7 @@ RSpec.describe "Api::V1::Users", type: :request do
 
       it "returns empty array for non-existent page" do
         json_response = JSON.parse(response.body)
-        
+
         expect(response).to have_http_status(:success)
         expect(json_response['data']).to be_empty
         expect(json_response['pagination']['current_page']).to eq(999)
@@ -77,7 +77,7 @@ RSpec.describe "Api::V1::Users", type: :request do
 
       it "returns the correct user" do
         json_response = JSON.parse(response.body)
-        
+
         expect(json_response['id']).to eq(user.id)
         expect(json_response['name']).to eq(user.name)
         expect(json_response).to have_key('created_at')

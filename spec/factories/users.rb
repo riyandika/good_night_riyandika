@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :user do
     name { Faker::Name.name }
-    
+
     trait :with_followers do
       after(:create) do |user|
         create_list(:user, 3).each do |follower|

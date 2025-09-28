@@ -7,10 +7,10 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: [:index, :show] do
-        resources :follows, only: [:create, :index] do
+      resources :users, only: [ :index, :show ] do
+        resources :follows, only: [ :create, :index ] do
           collection do
-            delete ':target_user_id', action: :destroy
+            delete ":target_user_id", action: :destroy
           end
         end
       end
