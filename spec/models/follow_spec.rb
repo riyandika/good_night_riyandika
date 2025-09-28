@@ -29,26 +29,26 @@ RSpec.describe Follow, type: :model do
     it 'is not valid with duplicate follower-followee combination' do
       Follow.create!(follower: follower, followee: followee)
       duplicate_follow = Follow.new(follower: follower, followee: followee)
-      
+
       expect(duplicate_follow).not_to be_valid
       expect(duplicate_follow.errors[:follower_id]).to include('has already been taken')
     end
 
     it 'allows the same user to be followed by different users' do
       other_follower = User.create!(name: 'Charlie')
-      
+
       Follow.create!(follower: follower, followee: followee)
       second_follow = Follow.new(follower: other_follower, followee: followee)
-      
+
       expect(second_follow).to be_valid
     end
 
     it 'allows the same user to follow different users' do
       other_followee = User.create!(name: 'Diana')
-      
+
       Follow.create!(follower: follower, followee: followee)
       second_follow = Follow.new(follower: follower, followee: other_followee)
-      
+
       expect(second_follow).to be_valid
     end
   end
@@ -81,7 +81,7 @@ RSpec.describe Follow, type: :model do
     let(:user1) { User.create!(name: 'User 1') }
     let(:user2) { User.create!(name: 'User 2') }
     let(:user3) { User.create!(name: 'User 3') }
-    
+
     let!(:old_follow) do
       Follow.create!(
         follower: user1,
@@ -89,7 +89,7 @@ RSpec.describe Follow, type: :model do
         created_at: 2.days.ago
       )
     end
-    
+
     let!(:new_follow) do
       Follow.create!(
         follower: user1,
@@ -97,7 +97,7 @@ RSpec.describe Follow, type: :model do
         created_at: 1.day.ago
       )
     end
-    
+
     let!(:other_follow) do
       Follow.create!(
         follower: user2,
@@ -170,7 +170,7 @@ RSpec.describe Follow, type: :model do
   describe 'database constraints' do
     it 'enforces uniqueness at database level' do
       Follow.create!(follower: follower, followee: followee)
-      
+
       expect {
         # Skip validations to test database constraint
         follow = Follow.new(follower: follower, followee: followee)
@@ -190,7 +190,7 @@ RSpec.describe Follow, type: :model do
 
     it 'maintains referential integrity' do
       follow = Follow.create!(follower: follower, followee: followee)
-      
+
       # Follower deletion should cascade
       expect { follower.destroy }.to change { Follow.count }.by(-1)
     end
@@ -198,10 +198,10 @@ RSpec.describe Follow, type: :model do
     it 'allows symmetric following relationships' do
       # A follows B
       follow1 = Follow.create!(follower: follower, followee: followee)
-      
+
       # B follows A
       follow2 = Follow.create!(follower: followee, followee: follower)
-      
+
       expect(follow1).to be_persisted
       expect(follow2).to be_persisted
       expect(Follow.count).to eq(2)

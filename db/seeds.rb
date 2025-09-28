@@ -18,10 +18,10 @@ if Rails.env.development?
   Follow.destroy_all
   SleepRecord.destroy_all
   User.destroy_all
-  
+
   # Reset auto-increment
   ActiveRecord::Base.connection.execute("ALTER TABLE users AUTO_INCREMENT = 1")
-  ActiveRecord::Base.connection.execute("ALTER TABLE sleep_records AUTO_INCREMENT = 1") 
+  ActiveRecord::Base.connection.execute("ALTER TABLE sleep_records AUTO_INCREMENT = 1")
   ActiveRecord::Base.connection.execute("ALTER TABLE follows AUTO_INCREMENT = 1")
 end
 
@@ -45,31 +45,31 @@ sleep_record_count = 0
 
 users.each_with_index do |user, index|
   num_records = rand(10..20)
-  
+
   num_records.times do
     # Random date within last 60 days
     sleep_date = Faker::Date.between(from: 60.days.ago, to: Date.current)
-    
+
     # Random sleep time between 9 PM and 2 AM
     sleep_hour = rand(21..26) % 24 # 21, 22, 23, 0, 1, 2
-    sleep_minute = [0, 15, 30, 45].sample
+    sleep_minute = [ 0, 15, 30, 45 ].sample
     sleep_at = sleep_date.beginning_of_day + sleep_hour.hours + sleep_minute.minutes
-    
+
     # Sleep duration between 4-12 hours
     duration_hours = rand(4.0..12.0).round(1)
     wake_up_at = sleep_at + duration_hours.hours
     duration_in_seconds = (duration_hours * 3600).to_i
-    
+
     SleepRecord.create!(
       user: user,
       sleep_at: sleep_at,
       wake_up_at: wake_up_at,
       duration_in_seconds: duration_in_seconds
     )
-    
+
     sleep_record_count += 1
   end
-  
+
   print "." if (index + 1) % 10 == 0
 end
 
@@ -82,11 +82,11 @@ follow_count = 0
 users.each_with_index do |user, index|
   # Each user follows 3-8 random other users
   num_follows = rand(3..8)
-  potential_followees = users - [user] # Can't follow yourself
-  
+  potential_followees = users - [ user ] # Can't follow yourself
+
   num_follows.times do
     followee = potential_followees.sample
-    
+
     # Avoid duplicate follows
     unless Follow.exists?(follower: user, followee: followee)
       Follow.create!(
@@ -95,14 +95,14 @@ users.each_with_index do |user, index|
       )
       follow_count += 1
     end
-    
+
     # Remove from potential list to avoid duplicates
     potential_followees.delete(followee)
-    
+
     # Break if we run out of potential followees
     break if potential_followees.empty?
   end
-  
+
   print "." if (index + 1) % 10 == 0
 end
 

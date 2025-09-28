@@ -49,28 +49,28 @@ RSpec.describe SleepRecord, type: :model do
     it 'is not valid when wake_up_at is before sleep_at' do
       sleep_at = Time.current
       wake_up_at = 1.hour.ago
-      
+
       sleep_record = SleepRecord.new(
         user: user,
         sleep_at: sleep_at,
         wake_up_at: wake_up_at,
         duration_in_seconds: 3600
       )
-      
+
       expect(sleep_record).not_to be_valid
       expect(sleep_record.errors[:wake_up_at]).to include('must be after sleep time')
     end
 
     it 'is not valid when wake_up_at equals sleep_at' do
       time = Time.current
-      
+
       sleep_record = SleepRecord.new(
         user: user,
         sleep_at: time,
         wake_up_at: time,
         duration_in_seconds: 3600
       )
-      
+
       expect(sleep_record).not_to be_valid
       expect(sleep_record.errors[:wake_up_at]).to include('must be after sleep time')
     end
@@ -144,7 +144,7 @@ RSpec.describe SleepRecord, type: :model do
       it 'returns records within the specified date range' do
         start_date = 3.days.ago
         end_date = 1.day.ago
-        
+
         records_in_range = SleepRecord.between_dates(start_date, end_date)
         expect(records_in_range).to include(old_record, new_record)
         expect(records_in_range).not_to include(user2_record)
@@ -212,7 +212,7 @@ RSpec.describe SleepRecord, type: :model do
     it 'handles sleep that crosses midnight' do
       yesterday_night = Time.current.beginning_of_day - 2.hours
       this_morning = Time.current.beginning_of_day + 6.hours
-      
+
       sleep_record = SleepRecord.new(
         user: user,
         sleep_at: yesterday_night,
@@ -227,13 +227,13 @@ RSpec.describe SleepRecord, type: :model do
     it 'automatically calculates duration_in_seconds when both sleep_at and wake_up_at are present' do
       sleep_time = Time.current
       wake_time = sleep_time + 8.hours
-      
+
       sleep_record = SleepRecord.create!(
         user: user,
-        sleep_at: sleep_time, 
+        sleep_at: sleep_time,
         wake_up_at: wake_time
       )
-      
+
       expect(sleep_record.duration_in_seconds).to eq(8.hours.to_i)
     end
 
@@ -250,15 +250,15 @@ RSpec.describe SleepRecord, type: :model do
       sleep_time = Time.current
       initial_wake_time = sleep_time + 6.hours
       new_wake_time = sleep_time + 9.hours
-      
+
       sleep_record = SleepRecord.create!(
         user: user,
-        sleep_at: sleep_time, 
+        sleep_at: sleep_time,
         wake_up_at: initial_wake_time
       )
-      
+
       expect(sleep_record.duration_in_seconds).to eq(6.hours.to_i)
-      
+
       sleep_record.update!(wake_up_at: new_wake_time)
       expect(sleep_record.duration_in_seconds).to eq(9.hours.to_i)
     end

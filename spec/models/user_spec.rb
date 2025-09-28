@@ -156,14 +156,14 @@ RSpec.describe User, type: :model do
         wake_up_at: Time.current,
         duration_in_seconds: 3600
       )
-      
+
       expect { user.destroy }.to change { SleepRecord.count }.by(-1)
     end
 
     it 'destroys follow relationships when user is destroyed' do
       user.follow(other_user)
       other_user.follow(user)
-      
+
       expect { user.destroy }.to change { Follow.count }.by(-2)
     end
   end

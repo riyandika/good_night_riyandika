@@ -35,7 +35,17 @@ gem "thruster", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
+# Pagination
+gem "kaminari"
+
+# Serializers
+gem "active_model_serializers", "~> 0.10.0"
+
+# ENV management
 gem "dotenv"
+
+# API documentation
+gem "rswag"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -51,4 +61,7 @@ group :development, :test do
   gem "faker"
 
   gem "rspec-rails", "~> 8.0"
+
+  # Factory for test data
+  gem "factory_bot_rails"
 end

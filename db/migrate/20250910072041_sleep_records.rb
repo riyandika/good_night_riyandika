@@ -6,7 +6,7 @@ class SleepRecords < ActiveRecord::Migration[8.0]
       t.datetime :wake_up_at
       t.integer :duration_in_seconds
       t.timestamps
-      t.index [:user_id, :created_at]
+      t.index [ :user_id, :created_at ]
     end
   end
 end
