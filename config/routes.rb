@@ -13,6 +13,11 @@ Rails.application.routes.draw do
             delete ":target_user_id", action: :destroy
           end
         end
+        resources :sleep_records, only: [ :create, :index ] do
+          collection do
+            get :friends_sleep_records
+          end
+        end
       end
     end
   end
